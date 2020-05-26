@@ -26,5 +26,23 @@ namespace BookListRazor.Pages.BookList
             Books = await _db.Book.ToListAsync(); //async lets you run multiple tasks at a time until its awaiting.. we need to await because we need to wait until we assing all the books that we found
 
         }
+
+        //Delete method
+         public async Task<IActionResult> OnPostDelete(int id)
+         {
+            //find the book in database 
+            var book = await _db.Book.FindAsync(id);
+
+            //if book is not found
+            if(book == null)
+            {
+                return NotFound();
+            }
+            //if book is found then remove and save changes 
+            _db.Book.Remove(book);
+            await _db.SaveChangesAsync();
+            //redirect 
+            return RedirectToPage("Index");
+         }
     }
 }
